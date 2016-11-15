@@ -52,7 +52,7 @@
     <?php  if (count($categories) <= 5) { ?>
     
       <?php foreach ($categories as $category) { ?>
-      <div class="col-md-2 col-xs-6">
+      <div class="col-md-3 col-xs-6">
         <div class="category-list-item">
         	<?php if($category['thumb']) { ?>
             <a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>"><span><?php echo $category['name']; ?></span></a>

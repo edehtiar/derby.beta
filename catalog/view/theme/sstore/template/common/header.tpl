@@ -422,27 +422,43 @@ if(!isset($storeset_status)) {
                     </a>
                     <a href="index.php?route=account/account" class="login-top-mobile"><span class="ti-user"></span></a>
                 </div>
-                    
-                <ul class="col-sm-7 col-md-5 top-panel-ul">
+                <?php if ($logo) { ?>
+                <?php if($_SERVER['REQUEST_URI'] == "/index.php?route=common/home" OR $_SERVER['REQUEST_URI'] == "/") { ?>
+                <div class="col-sm-hidden col-md-2 top-panel-div">
+                    <div class="header_logo">
+                        <img src="<?php echo $logo; ?>" class="img-responsive" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" />
+                    </div>
+                </div>
+                <?php } else { ?>
+                <div class="col-sm-hidden col-md-2 top-panel-div">
+                    <div class="header_logo">
+                        <a href="<?php echo $home; ?>"><img class="img-responsive" src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" /></a>
+                    </div>
+                </div>
+                <?php } ?>
+                <?php } ?>
+                <div class="col-sm-2 col-md-1 top-panel-div">
+                    <div class="settings-list">
+                        <?php echo $language; ?>
+                    </div>
+                </div>
+                <ul class="col-sm-5 col-md-6 top-panel-ul">
                     <?php foreach ($informations as $information) { ?>
                         <li><a href="<?php echo $information['href']; ?>"><?php echo $information['title']; ?></a></li>
                     <?php } ?>
                 </ul>
-                <div class="col-sm-5 col-md-7 top-panel-div">
+                <div class="col-sm-5 col-md-3 top-panel-div">
                     <div class="right">
                         <?php if (!$logged) { ?>
                             <a href="#loginmodal" class="register" id="modaltrigger"><span class="ti-user"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_account; ?></span></a>
                         <?php } else { ?>
                             <a href="index.php?route=account/account" class="register logged"><span class="ti-user"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_account; ?></span></a>
                         <?php } ?>
-                        <a href="<?php echo $wishlist; ?>" id="wishlist-total"><span class="ti-heart"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_wishlist; ?></span></a>
-                        <a href="<?php echo $shopping_cart; ?>" class="total-cart"><span class="ti-shopping-cart"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_shopping_cart; ?></span></a>
-                        <a href="<?php echo $checkout; ?>" class="checkout-top"><span class="ti-check-box"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_checkout; ?></span></a>
+                       <a href="<?php echo $checkout; ?>" class="checkout-top"><span class="ti-check-box"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_checkout; ?></span></a>
                         <?php if(!empty($language) && $language !="" OR !empty($currency) && $currency!="") { ?>
                         <div class="settings"><span class="ti-settings"></span>&nbsp;<span class="top-panel-div-span"><?php echo $text_settings; ?></span>
                             <div class="settings-list">
-                               	<?php echo $language; ?>
-                				<?php echo $currency; ?>
+                               		<?php echo $currency; ?>
                             </div>
                         </div>
                         <?php } ?>
@@ -599,22 +615,8 @@ if(!isset($storeset_status)) {
        <!-- ============ header =================== -->
             <header class="row">                
                 <?php if($storeset_status == "on") { ?> 
-                     <?php if ($logo) { ?>
-                     	<?php if($_SERVER['REQUEST_URI'] == "/index.php?route=common/home" OR $_SERVER['REQUEST_URI'] == "/") { ?>
-	                     	<div class="col-sm-3 col-md-3">
-	                     		<div class="header_logo">
-	                     			<img src="<?php echo $logo; ?>" class="img-responsive" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" />
-	                     		</div>
-		                    </div>
-                     	<?php } else { ?>
-	                      <div class="col-sm-3 col-md-3">
-	                      	<div class="header_logo">
-	                      		<a href="<?php echo $home; ?>"><img class="img-responsive" src="<?php echo $logo; ?>" title="<?php echo $name; ?>" alt="<?php echo $name; ?>" /></a>
-	                      	</div>
-	                      </div>
-	                    <?php } ?>    
-                      <?php } ?>            
-                    <div id="contacts" class="col-sm-3 col-md-3">
+
+                    <div id="contacts" class="col-sm-3 col-md-2">
                     <i class="fa fa-<?php echo $storeset_custom_icon1; ?> contacts-fa"></i>
                         <div id="phone">
                             <div><?php if($storeset_cont_phone1 != '') { ?>
