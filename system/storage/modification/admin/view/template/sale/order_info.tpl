@@ -604,6 +604,26 @@ $('#button-history').on('click', function() {
 				$('#history').before('<div class="alert alert-success"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 				$('textarea[name=\'comment\']').val('');
+
+      //START reward_customer_sv
+			var reward = $('input[name=\'reward_status\']').val();
+			if (reward == "0") {
+        if ($("#button-reward-add").length) {
+          $("#button-reward-add").attr('id', 'button-reward-remove');
+          $("#button-reward-remove").attr('title', '<?php echo $button_reward_remove; ?>');
+          $("#button-reward-remove").removeClass("btn-success").addClass('btn-danger');
+          $("#button-reward-remove").html('<i class="fa fa-minus-circle"></i>');
+        }
+			} else {
+        if ($("#button-reward-remove").length) {
+          $("#button-reward-remove").attr('id', 'button-reward-add');
+          $("#button-reward-add").attr('title', '<?php echo $button_reward_add; ?>');
+          $("#button-reward-add").removeClass("btn-danger").addClass('btn-success');
+          $("#button-reward-add").html('<i class="fa fa-plus-circle"></i>');
+        }
+			};
+      //END reward_customer_sv
+      
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {

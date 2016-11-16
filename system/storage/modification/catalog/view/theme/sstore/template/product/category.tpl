@@ -59,7 +59,7 @@
     <?php  if (count($categories) <= 5) { ?>
     
       <?php foreach ($categories as $category) { ?>
-      <div class="col-md-2 col-xs-6">
+      <div class="col-md-3 col-xs-6">
         <div class="category-list-item">
         	<?php if($category['thumb']) { ?>
             <a href="<?php echo $category['href']; ?>"><img src="<?php echo $category['thumb']; ?>" alt="<?php echo $category['name']; ?>" title="<?php echo $category['name']; ?>"><span><?php echo $category['name']; ?></span></a>
@@ -76,7 +76,7 @@
       <?php $j = $i + ceil(count($categories) / 3); ?>
       <?php for (; $i < $j; $i++) { ?>
       <?php if (isset($categories[$i])) { ?>
-            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-4">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-xs-8">
         <div class="category-list-item">
             <?php if($categories[$i]['thumb']) { ?>
             <a href="<?php echo $categories[$i]['href']; ?>"><img src="<?php echo $categories[$i]['thumb']; ?>" alt="<?php echo $categories[$i]['name']; ?>" title="<?php echo $categories[$i]['name']; ?>"><span><?php echo $categories[$i]['name']; ?></span></a>

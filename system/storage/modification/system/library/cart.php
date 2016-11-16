@@ -14,6 +14,7 @@ class Cart {
 		$this->db = $registry->get('db');
 		$this->tax = $registry->get('tax');
 		$this->weight = $registry->get('weight');
+    $this->rwcsv = $registry->get('rwcsv'); //RCSV
 
 
                             $this->registry = $registry;
@@ -51,6 +52,17 @@ class Cart {
 
 		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 
+
+      //START reward_customer_sv
+      $rewards_used = 0;
+      $reward_opt = $this->config->get('reward_customer_sv');
+      if ($reward_opt['allow_pay_points']) {
+        if ((isset($this->session->data['reward'])) && ($this->customer->isLogged())) {
+          $rewards_used = $this->session->data['reward'];
+        }
+      }
+      //END reward_customer_sv
+      
 		foreach ($cart_query->rows as $cart) {
 			$stock = true;
 
@@ -186,27 +198,32 @@ class Cart {
 
 				$cart_2_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 
+if (($this->customer->isLogged()) && (!$reward_opt['identical_users'])) {
+        $customer_group_id = (int)$this->config->get('config_customer_group_id');
+      } else {
+        $customer_group_id = (int)$this->rwcsv->config_customer_group_id;
+      }
 				foreach ($cart_2_query->rows as $cart_2) {
 					if ($cart_2['product_id'] == $cart['product_id']) {
 						$discount_quantity += $cart_2['quantity'];
 					}
 				}
 
-				$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
+				$product_discount_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_discount WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . $customer_group_id . "' AND quantity <= '" . (int)$discount_quantity . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY quantity DESC, priority ASC, price ASC LIMIT 1");
 
 				if ($product_discount_query->num_rows) {
 					$price = $product_discount_query->row['price'];
 				}
 
 				// Product Specials
-				$product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
+				$product_special_query = $this->db->query("SELECT price FROM " . DB_PREFIX . "product_special WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . $customer_group_id . "' AND ((date_start = '0000-00-00' OR date_start < NOW()) AND (date_end = '0000-00-00' OR date_end > NOW())) ORDER BY priority ASC, price ASC LIMIT 1");
 
 				if ($product_special_query->num_rows) {
 					$price = $product_special_query->row['price'];
 				}
 
 				// Reward Points
-				$product_reward_query = $this->db->query("SELECT points FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'");
+				$product_reward_query = $this->db->query("SELECT points FROM " . DB_PREFIX . "product_reward WHERE product_id = '" . (int)$cart['product_id'] . "' AND customer_group_id = '" . $customer_group_id . "'");
 
 				if ($product_reward_query->num_rows) {
 					$reward = $product_reward_query->row['points'];
@@ -233,7 +250,7 @@ class Cart {
 					$stock = false;
 				}
 
-				$recurring_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "recurring r LEFT JOIN " . DB_PREFIX . "product_recurring pr ON (r.recurring_id = pr.recurring_id) LEFT JOIN " . DB_PREFIX . "recurring_description rd ON (r.recurring_id = rd.recurring_id) WHERE r.recurring_id = '" . (int)$cart['recurring_id'] . "' AND pr.product_id = '" . (int)$cart['product_id'] . "' AND rd.language_id = " . (int)$this->config->get('config_language_id') . " AND r.status = 1 AND pr.customer_group_id = '" . (int)$this->config->get('config_customer_group_id') . "'");
+				$recurring_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "recurring r LEFT JOIN " . DB_PREFIX . "product_recurring pr ON (r.recurring_id = pr.recurring_id) LEFT JOIN " . DB_PREFIX . "recurring_description rd ON (r.recurring_id = rd.recurring_id) WHERE r.recurring_id = '" . (int)$cart['recurring_id'] . "' AND pr.product_id = '" . (int)$cart['product_id'] . "' AND rd.language_id = " . (int)$this->config->get('config_language_id') . " AND r.status = 1 AND pr.customer_group_id = '" . $customer_group_id . "'");
 
 				if ($recurring_query->num_rows) {
 					$recurring = array(
@@ -261,6 +278,12 @@ class Cart {
                                 
 
 
+
+          //RCSV Start
+          $rp = array();
+          $this->rwcsv->system_library_cart($rp, $price, $product_special_query->num_rows, $product_query->row, $option_data, $reward, $cart['quantity'], $rewards_used);
+          //RCSV End
+      
 				$product_data[] = array(
 					'cart_id'         => $cart['cart_id'],
 					'product_id'      => $product_query->row['product_id'],
@@ -276,8 +299,8 @@ class Cart {
 					'stock'           => $stock,
 					'price'           => ($price + $option_price),
 					'total'           => ($price + $option_price) * $cart['quantity'],
-					'reward'          => $reward * $cart['quantity'],
-					'points'          => ($product_query->row['points'] ? ($product_query->row['points'] + $option_points) * $cart['quantity'] : 0),
+					'reward'          => $rp['reward'], //reward_customer_sv
+					'points'          => $rp['points'], //reward_customer_sv
 					'tax_class_id'    => $product_query->row['tax_class_id'],
 					'weight'          => ($product_query->row['weight'] + $option_weight) * $cart['quantity'],
 					'weight_class_id' => $product_query->row['weight_class_id'],
@@ -427,6 +450,13 @@ class Cart {
 		return $shipping;
 	}
 
+
+  //reward_customer_sv START
+  public function clearData() {
+    $this->data = array();
+  }
+  //reward_customer_sv END
+      
 	public function hasDownload() {
 		$download = false;
 

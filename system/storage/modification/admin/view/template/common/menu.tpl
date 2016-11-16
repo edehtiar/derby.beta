@@ -162,6 +162,7 @@
       <li><a href="<?php echo $order; ?>"><?php echo $text_order; ?></a></li>
       <li><a href="<?php echo $order_recurring; ?>"><?php echo $text_order_recurring; ?></a></li>
       <li><a href="<?php echo $return; ?>"><?php echo $text_return; ?></a></li>
+<li><a href="<?php echo $reward_customer; ?>"><?php echo $text_reward_customer; ?></a></li>
       <li><a class="parent"><?php echo $text_voucher; ?></a>
         <ul>
           <li><a href="<?php echo $voucher; ?>"><?php echo $text_voucher; ?></a></li>
@@ -187,7 +188,7 @@
       <li><a href="<?php echo $marketing; ?>"><?php echo $text_marketing; ?></a></li>
       <li><a href="<?php echo $affiliate; ?>"><?php echo $text_affiliate; ?></a></li>
       <li><a href="<?php echo $coupon; ?>"><?php echo $text_coupon; ?></a></li>
-      <li><a href="<?php echo $contact; ?>"><?php echo $text_contact; ?></a></li>
+      <li><a href="<?php echo $contacts; ?>"><?php echo $text_contact; ?></a></li>
     </ul>
   </li>
   <li id="system"><a class="parent"><i class="fa fa-cog fa-fw"></i> <span><?php echo $text_system; ?></span></a>

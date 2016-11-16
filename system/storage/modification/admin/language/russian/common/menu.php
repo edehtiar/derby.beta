@@ -26,6 +26,7 @@
         $_['text_sstore'] = 'Настройки Sstore';
         $_['text_megamenu'] = 'Megamenu';
 
+$_['text_reward_customer'] = 'Поощрение клиента';
 $_['text_analytics']                        = 'Статистика';
 $_['text_affiliate']          				= 'Партнеры';
 $_['text_api']          					= 'API';

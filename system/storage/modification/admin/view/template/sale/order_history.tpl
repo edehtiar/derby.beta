@@ -1,3 +1,4 @@
+<input type="hidden" id="reward_statusreward_status" value="<?php echo $reward_total; ?>" />
 <table class="table table-bordered">
   <thead>
     <tr>

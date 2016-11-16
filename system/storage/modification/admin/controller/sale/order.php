@@ -1534,6 +1534,8 @@ class ControllerSaleOrder extends Controller {
 		$data['column_notify'] = $this->language->get('column_notify');
 		$data['column_comment'] = $this->language->get('column_comment');
 
+    $data['reward_total'] = $this->rwcsv->getTotalCustomerRewardsByOrderId($this->request->get['order_id']);//rwcsv
+
 		if (isset($this->request->get['page'])) {
 			$page = $this->request->get['page'];
 		} else {

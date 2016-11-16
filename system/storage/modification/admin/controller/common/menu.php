@@ -13,6 +13,8 @@ class ControllerCommonMenu extends Controller {
 			
 	public function index() {
 		$this->load->language('common/menu');
+    $data['text_reward_customer'] = $this->language->get('text_reward_customer');
+    $data['reward_customer'] = $this->url->link('sale/reward_customer_sv', 'token=' . $this->session->data['token'], 'SSL');
 
         $data['text_oct_sreview'] = $this->language->get('text_oct_sreview');
         $data['text_oct_sreview_subject'] = $this->language->get('text_oct_sreview_subject');
@@ -220,6 +222,7 @@ class ControllerCommonMenu extends Controller {
 		$data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
 		$data['country'] = $this->url->link('localisation/country', 'token=' . $this->session->data['token'], 'SSL');
 		$data['contact'] = $this->url->link('marketing/contact', 'token=' . $this->session->data['token'], 'SSL');
+			$data['contacts'] = $this->url->link('marketing/contacts', 'token=' . $this->session->data['token'], 'SSL');
 		$data['coupon'] = $this->url->link('marketing/coupon', 'token=' . $this->session->data['token'], 'SSL');
 		$data['currency'] = $this->url->link('localisation/currency', 'token=' . $this->session->data['token'], 'SSL');
 		$data['customer'] = $this->url->link('customer/customer', 'token=' . $this->session->data['token'], 'SSL');

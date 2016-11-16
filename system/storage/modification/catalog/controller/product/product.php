@@ -597,6 +597,7 @@ class ControllerProductProduct extends Controller {
 			}
 
 			$data['options'] = array();
+      $this->rwcsv->catalog_product($data, $product_info);//RWCSV
 
 			foreach ($this->model_catalog_product->getProductOptions($this->request->get['product_id']) as $option) {
 				$product_option_value_data = array();
@@ -627,6 +628,13 @@ class ControllerProductProduct extends Controller {
 							'price'                   => $price,
 							'price_prefix'            => $option_value['price_prefix']
 						);
+            //RCSV START
+            if ($this->rwcsv->ocVersion['main'] < 200) {
+              $this->rwcsv->catalog_product_option($option_value_data, $option_value, $this->data, $product_info);
+            } else {
+              $this->rwcsv->catalog_product_option($product_option_value_data, $option_value, $data, $product_info);
+            }
+            //RCSV END
 					}
 				}
 
@@ -1041,6 +1049,7 @@ class ControllerProductProduct extends Controller {
 
 	public function write() {
 		$this->load->language('product/product');
+    $this->language->load('tool/reward_customer_sv');
 
 		$json = array();
 
@@ -1069,9 +1078,22 @@ class ControllerProductProduct extends Controller {
 			if (!isset($json['error'])) {
 				$this->load->model('catalog/review');
 
-				$this->model_catalog_review->addReview($this->request->get['product_id'], $this->request->post);
+				//START reward_customer_sv
+        $customer_id = $this->customer->getId();
+				if (!is_null($customer_id)) {
+					$result = $this->rwcsv->checkReview($this->request->get['product_id']);
+				} else {
+					$result = false;
+					//$data['customer_id'] = 0;
+				}
 
-				$json['success'] = $this->language->get('text_success');
+				if (!$result) {
+					$this->model_catalog_review->addReview($this->request->get['product_id'], $this->request->post);
+					$json['success'] = $this->language->get('text_success');
+				} else {
+					$json['error'] = sprintf($this->language->get('error_double_review'), $this->request->post['name']);
+				}
+        //END reward_customer_sv
 			}
 		}
 

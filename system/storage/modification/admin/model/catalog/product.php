@@ -154,7 +154,7 @@ class ModelCatalogProduct extends Model {
 
 		if (isset($data['product_reward'])) {
 			foreach ($data['product_reward'] as $customer_group_id => $product_reward) {
-				if ((int)$product_reward['points'] > 0) {
+				if ((int)$product_reward['points'] != 0) {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "product_reward SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$customer_group_id . "', points = '" . (int)$product_reward['points'] . "'");
 				}
 			}
@@ -384,7 +384,7 @@ class ModelCatalogProduct extends Model {
 
 		if (isset($data['product_reward'])) {
 			foreach ($data['product_reward'] as $customer_group_id => $value) {
-				if ((int)$value['points'] > 0) {
+				if ((int)$value['points'] != 0) {
 					$this->db->query("INSERT INTO " . DB_PREFIX . "product_reward SET product_id = '" . (int)$product_id . "', customer_group_id = '" . (int)$customer_group_id . "', points = '" . (int)$value['points'] . "'");
 				}
 			}
